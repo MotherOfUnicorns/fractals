@@ -12,6 +12,8 @@ def draw_triangle(a_turtle, size, direction):
     '''draws an equilateral triangle with legnth of each side *size*.
     if *direction* is 'up', the triangle points upward,
     if *direction* is 'down', the triangle points downward.'''
+    assert (direction in ['up', 'down']), 'Direction of triangle must be \
+\'up\' or \'down\'!'
     a_turtle.pendown()
     for _ in range(3):
         a_turtle.forward(size)
@@ -23,7 +25,7 @@ def draw_triangle(a_turtle, size, direction):
 
 def _draw_fractal(a_turtle, size):
     '''helper function for draw_fractal()'''
-    if size == 10:
+    if size == 4:
         draw_triangle(a_turtle, size, 'down')
     else:
         draw_triangle(a_turtle, size, 'down')
@@ -39,26 +41,30 @@ def _draw_fractal(a_turtle, size):
 def draw_fractal(size):
     '''draws a Sierpinski triangle.
     size(int) must be a power of 2'''
-    size *= 10
+    #size *= 10
     canvas = turtle.Screen()
     canvas.bgcolor('yellow')
-    canvas.setup (width=size+10, height=size+10, startx=0, starty=0)
+    canvas.setup (width=1000, height=1000, startx=0, starty=0)
 
     elfie = turtle.Turtle()
-    elfie.shape('turtle')
+    #elfie.shape('turtle')
     elfie.color('blue')
-    elfie.speed(8)
+    elfie.speed(0) # fastest speed
     elfie.penup()
     elfie.setx(-200)
     elfie.sety(-200)
+    elfie.hideturtle()
 
     draw_triangle(elfie, size, 'up')
     elfie.setx(elfie.xcor() + size/4)
     elfie.sety(elfie.ycor() + size/4 * (3**.5))
     _draw_fractal(elfie, size/2)
+    
+    cv = turtle.getcanvas()
+    cv.postscript(file="turtle_%i.ps" % (size), colormode='color')
 
     canvas.exitonclick()
 
 
 if __name__ == '__main__':
-    draw_fractal(64)
+    draw_fractal(512)
